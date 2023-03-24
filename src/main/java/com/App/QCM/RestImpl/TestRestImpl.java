@@ -1,10 +1,10 @@
 package com.App.QCM.RestImpl;
 
-import com.App.QCM.Model.Theme;
-import com.App.QCM.Rest.ThemeRest;
-import com.App.QCM.Service.ThemeService;
+import com.App.QCM.Model.Qcm;
+import com.App.QCM.Model.Test;
+import com.App.QCM.Rest.TestRest;
+import com.App.QCM.Service.TestService;
 import com.App.QCM.Utils.QcmUtils;
-import com.App.QCM.Wrapper.ThemeWrapper;
 import com.App.QCM.constents.QcmConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,15 +16,15 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-public class ThemeRestImpl implements ThemeRest {
+public class TestRestImpl implements TestRest {
 
     @Autowired
-    ThemeService themeService;
+    TestService testService;
 
     @Override
-    public ResponseEntity<String> addNewTheme(Map<String, String> requestMap) {
+    public ResponseEntity<String> add(Map<String, String> requestMap) {
         try {
-            return themeService.addNewTheme(requestMap);
+            return testService.add(requestMap);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -32,19 +32,9 @@ public class ThemeRestImpl implements ThemeRest {
     }
 
     @Override
-    public ResponseEntity<List<ThemeWrapper>> getAllTheme() {
+    public ResponseEntity<String> addQcmToTest(Integer testId, Qcm qcmRequest) {
         try {
-            return themeService.getAllTheme();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-    @Override
-    public ResponseEntity<Theme> getThemeById(Integer themeId) {
-        try {
-            return themeService.getThemeById(themeId);
+            return testService.addQcmToTest(testId, qcmRequest);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -52,9 +42,29 @@ public class ThemeRestImpl implements ThemeRest {
     }
 
     @Override
-    public ResponseEntity<String> updateTheme(Map<String, String> requestMap) {
+    public ResponseEntity<List<Test>> getAllTest() {
         try {
-            return themeService.updateTheme(requestMap);
+            return testService.getAllTest();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    public ResponseEntity<Test> getTestById(Integer testId) {
+        try {
+            return testService.getTestById(testId);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    public ResponseEntity<String> updateTest(Map<String, String> requestMap) {
+        try {
+            return testService.updateTest(requestMap);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -62,15 +72,22 @@ public class ThemeRestImpl implements ThemeRest {
     }
 
     @Override
-    public ResponseEntity<String> deleteTheme(Integer id) {
+    public ResponseEntity<String> deleteTest(Integer id) {
         try {
-            System.out.print("test");
-            return themeService.deleteTheme(id);
+            return testService.deleteTest(id);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        System.out.print("test2");
         return QcmUtils.getResponseEntity(QcmConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @Override
+    public ResponseEntity<String> deleteQcmInTest(Integer testId, Integer id) {
+        try {
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return QcmUtils.getResponseEntity(QcmConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }

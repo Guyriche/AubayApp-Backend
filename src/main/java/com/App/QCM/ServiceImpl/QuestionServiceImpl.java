@@ -2,12 +2,15 @@ package com.App.QCM.ServiceImpl;
 
 import com.App.QCM.JWT.JwtFilter;
 import com.App.QCM.Model.Difficulty;
+import com.App.QCM.Model.Proposition;
 import com.App.QCM.Model.Question;
+import com.App.QCM.Model.Theme;
 import com.App.QCM.Service.QuestionService;
 import com.App.QCM.Utils.QcmUtils;
+import com.App.QCM.Wrapper.QuestionWrapper;
 import com.App.QCM.constents.QcmConstants;
+import com.App.QCM.dao.PropositionDao;
 import com.App.QCM.dao.QuestionDao;
-import com.google.common.base.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +29,9 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Autowired
     QuestionDao questionDao;
+
+    @Autowired
+    PropositionDao propositionDao;
 
     @Override
     public ResponseEntity<String> addNewQuestion(Map<String, String> requestMap) {
@@ -47,7 +53,7 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     private boolean validateQuestionMap(Map<String, String> requestMap, boolean b) {
-        if (requestMap.containsKey("content_question") && requestMap.containsKey("num_question"))
+        if (requestMap.containsKey("content_question") && requestMap.containsKey("numQuestion"))
             if (requestMap.containsKey("id") && b) {
                 return true;
             } else if (!b) {
@@ -58,27 +64,62 @@ public class QuestionServiceImpl implements QuestionService {
 
     private Question getQuestionFromMap(Map<String, String> requestMap, boolean isAdd) {
         Question question = new Question();
+
+        Theme theme = new Theme();
+        theme.setId(Integer.parseInt(requestMap.get("themeId")));
+
         if (isAdd) {
             question.setId(Integer.parseInt(requestMap.get("id")));
         }
+        question.setTheme(theme);
         question.setContent_question(requestMap.get("content_question"));
-        question.setNumQuestion(Integer.parseInt(requestMap.get("num_question")));
+        question.setNumQuestion(Integer.parseInt(requestMap.get("numQuestion")));
         question.setDifficulty(Difficulty.valueOf(requestMap.get("difficulty")));
 
         return question;
     }
 
     @Override
-    public ResponseEntity<List<Question>> getAllQuestion(String filterValue) {
+    public ResponseEntity<String> addPropositionToQuestion(Integer questionId, Proposition propositionRequest) {
         try {
-            if (!Strings.isNullOrEmpty(filterValue) && filterValue.equalsIgnoreCase("true")) {
-                return new ResponseEntity<List<Question>>(questionDao.getAllQuestion(), HttpStatus.OK);
+            if (jwtFilter.isAdmin()) {
+                Optional<Question> optQuestion = questionDao.findById(questionId);
+                if (optQuestion.isEmpty()) {
+                    return QcmUtils.getResponseEntity("This Question doesn't Exist", HttpStatus.NOT_FOUND);
+                }
+
+                Question question = optQuestion.get();
+                if (propositionRequest.getId() != null) {
+                    Optional<Proposition> optProposition = propositionDao.findById(propositionRequest.getId());
+                    //Proposition proposition = optProposition.get();
+                    if (!optProposition.isEmpty()) {
+
+                        if (question.getPropositions().contains(optProposition)) {
+                            return QcmUtils.getResponseEntity("This Proposition is Already Exist", HttpStatus.OK);
+                        }
+                        question.addProposition(optProposition.get());
+                        questionDao.save(question);
+
+                    }
+                    return QcmUtils.getResponseEntity("Proposition Added Successfully..", HttpStatus.OK);
+                }
+            } else {
+                return QcmUtils.getResponseEntity(QcmConstants.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED);
             }
-            return new ResponseEntity<>(questionDao.findAll(), HttpStatus.OK);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        return new ResponseEntity<List<Question>>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+        return QcmUtils.getResponseEntity(QcmConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    public ResponseEntity<List<Question>> getAllQuestion() {
+        try {
+            return new ResponseEntity<>(questionDao.getAllQuestion(), HttpStatus.OK);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @Override
@@ -109,7 +150,7 @@ public class QuestionServiceImpl implements QuestionService {
         try {
             if (jwtFilter.isAdmin()) {
                 Optional optional = questionDao.findById(id);
-                if (optional.isEmpty()) {
+                if (!optional.isEmpty()) {
                     questionDao.deleteById(id);
                     return QcmUtils.getResponseEntity("Question Deleted Successfully..", HttpStatus.OK);
                 }
@@ -137,4 +178,38 @@ public class QuestionServiceImpl implements QuestionService {
         }
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    @Override
+    public ResponseEntity<List<QuestionWrapper>> getQuestionByThemeId(Integer themeId) {
+        try {
+            return new ResponseEntity<>(questionDao.getQuestionByTheme(themeId), HttpStatus.OK);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    public ResponseEntity<List<QuestionWrapper>> getAllQuestionByQcmId(Integer qcmId) {
+        try {
+            System.out.print("test2");
+            return new ResponseEntity<>(questionDao.getAllQuestionByQcmId(qcmId), HttpStatus.OK);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        System.out.print("error2");
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    public ResponseEntity<List<QuestionWrapper>> getAllQuestionWrapper() {
+        try {
+            System.out.print("test1");
+            return new ResponseEntity<>(questionDao.getAllQuestionWrapper(), HttpStatus.OK);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
 }

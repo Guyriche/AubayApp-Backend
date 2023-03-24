@@ -21,6 +21,16 @@ public class PropositionRestImpl implements PropositionRest {
     PropositionService propositionService;
 
     @Override
+    public ResponseEntity<String> addProposition(Map<String, String> propositionRequest) {
+        try {
+            return propositionService.addProposition(propositionRequest);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return QcmUtils.getResponseEntity(QcmConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
     public ResponseEntity<String> addNewProposition(Integer questionId, Map<String, String> propositionRequestMap) {
         try {
             return propositionService.addNewProposition(questionId, propositionRequestMap);

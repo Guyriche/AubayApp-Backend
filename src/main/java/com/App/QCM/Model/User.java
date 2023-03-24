@@ -14,6 +14,10 @@ import java.io.Serializable;
 
 @NamedQuery(name = "User.getAllAdmin", query = "select u.email from User u where u.role='admin'")
 
+@NamedQuery(name = "User.countUser", query = "select count(*) from User u where u.role='user'")
+
+@NamedQuery(name = "User.countAdmin", query = "select count(*) from User u where u.role='admin'")
+
 
 //@Data
 @Entity

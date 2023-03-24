@@ -4,9 +4,9 @@ import com.App.QCM.JWT.JwtFilter;
 import com.App.QCM.Model.Theme;
 import com.App.QCM.Service.ThemeService;
 import com.App.QCM.Utils.QcmUtils;
+import com.App.QCM.Wrapper.ThemeWrapper;
 import com.App.QCM.constents.QcmConstants;
 import com.App.QCM.dao.ThemeDao;
-import com.google.common.base.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -67,16 +67,16 @@ public class ThemeServiceImpl implements ThemeService {
 
 
     @Override
-    public ResponseEntity<List<Theme>> getAllTheme(String filterValue) {
-        try {
+    public ResponseEntity<List<ThemeWrapper>> getAllTheme() {
+        try {/*
             if (!Strings.isNullOrEmpty(filterValue) && filterValue.equalsIgnoreCase("true")) {
-                return new ResponseEntity<List<Theme>>(themeDao.getAllTheme(), HttpStatus.OK);
-            }
-            return new ResponseEntity<>(themeDao.findAll(), HttpStatus.OK);
+                return new ResponseEntity<List<ThemeWrapper>>(themeDao.getAllTheme(), HttpStatus.OK);
+            }*/
+            return new ResponseEntity<>(themeDao.getAllTheme(), HttpStatus.OK);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        return new ResponseEntity<List<Theme>>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @Override
@@ -106,11 +106,14 @@ public class ThemeServiceImpl implements ThemeService {
     public ResponseEntity<String> deleteTheme(Integer id) {
         try {
             if (jwtFilter.isAdmin()) {
+                System.out.print("test3");
                 Optional optional = themeDao.findById(id);
-                if (optional.isEmpty()) {
+                if (!optional.isEmpty()) {
+                    System.out.print("test4");
                     themeDao.deleteById(id);
                     return QcmUtils.getResponseEntity("Theme Deleted Successfully..", HttpStatus.OK);
                 }
+                System.out.print("test5");
                 return QcmUtils.getResponseEntity("Theme id does not exist..", HttpStatus.OK);
             } else {
                 return QcmUtils.getResponseEntity(QcmConstants.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED);
@@ -118,6 +121,22 @@ public class ThemeServiceImpl implements ThemeService {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+        System.out.print("test6");
         return QcmUtils.getResponseEntity(QcmConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    public ResponseEntity<Theme> getThemeById(Integer themeId) {
+        try {
+            Optional<Theme> optTheme = themeDao.findById(themeId);
+            if (!optTheme.isEmpty()) {
+                optTheme.get();
+                return new ResponseEntity<>(optTheme.get(), HttpStatus.OK);
+            }
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

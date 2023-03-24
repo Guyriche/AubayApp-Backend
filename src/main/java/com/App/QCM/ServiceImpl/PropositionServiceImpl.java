@@ -60,6 +60,26 @@ public class PropositionServiceImpl implements PropositionService {
         return QcmUtils.getResponseEntity(QcmConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
     }*/
 
+
+    @Override
+    public ResponseEntity<String> addProposition(Map<String, String> propositionRequest) {
+        try {
+            if (jwtFilter.isAdmin()) {
+                if (validatePropositionMap(propositionRequest, false)) {
+                    propositionDao.save(getPropositionFromMap(propositionRequest, false));
+                    return QcmUtils.getResponseEntity("Response Added Successfully..", HttpStatus.OK);
+                } else {
+                    QcmUtils.getResponseEntity("Data Isn't Correct.", HttpStatus.BAD_REQUEST);
+                }
+            } else {
+                return QcmUtils.getResponseEntity(QcmConstants.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return QcmUtils.getResponseEntity(QcmConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     @Override
     public ResponseEntity<String> addNewProposition(Integer questionId, Map<String, String> propositionReq) {
         try {
@@ -118,7 +138,7 @@ public class PropositionServiceImpl implements PropositionService {
         }
         proposition.setNum_proposition(Integer.parseInt(requestMap.get("num_proposition")));
         proposition.setContent_proposition(requestMap.get("content_proposition"));
-        proposition.setStatus_proposition(Boolean.parseBoolean("status_proposition"));
+        proposition.setStatus_proposition(Boolean.parseBoolean(requestMap.get("status_proposition")));
 
         return proposition;
     }

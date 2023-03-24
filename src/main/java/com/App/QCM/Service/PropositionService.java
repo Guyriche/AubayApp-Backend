@@ -21,4 +21,6 @@ public interface PropositionService {
     ResponseEntity<List<Proposition>> getAllPropositionByQuestionsId(Integer questionId);
 
     ResponseEntity<String> deletePropositionFromQuestion(Integer questionId, Integer propositionId);
+
+    ResponseEntity<String> addProposition(Map<String, String> propositionRequest);
 }

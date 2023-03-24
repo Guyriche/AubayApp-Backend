@@ -6,10 +6,10 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 @NamedQuery(name = "Proposition.getAllProposition", query = "select p from Proposition p")
+//@NamedQuery(name = "Proposition.getAllQuestionsByPropositionId", query = "select new com.App.QCM.Wrapper.PropositionWrapper() from Proposition p where p.id =: id")
 
 //@Data
 @Entity
@@ -40,7 +40,7 @@ public class Proposition implements Serializable {
             CascadeType.MERGE
     })
     @JsonIgnore
-    private Set<Question> questions = new HashSet<>();
+    private List<Question> questions;
     //private Question question;
 
     public Proposition() {
@@ -64,11 +64,11 @@ public class Proposition implements Serializable {
         this.status_proposition = status_proposition;
     }
 
-    public Set<Question> getQuestions() {
+    public List<Question> getQuestions() {
         return questions;
     }
 
-    public void setQuestions(Set<Question> questions) {
+    public void setQuestions(List<Question> questions) {
         this.questions = questions;
     }
 
@@ -102,5 +102,19 @@ public class Proposition implements Serializable {
 
     public void setStatus_proposition(Boolean status_proposition) {
         this.status_proposition = status_proposition;
+    }
+
+    public void addQuestion(Question question) {
+        this.questions.add(question);
+        question.getPropositions().add(this);
+    }
+
+    public void removeQuestion(Integer questionId) {
+
+        Question question = this.questions.stream().filter(t -> t.getId() == questionId).findFirst().orElse(null);
+        if (question != null) {
+            this.questions.remove(question);
+            question.getPropositions().remove(this);
+        }
     }
 }

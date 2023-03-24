@@ -1,7 +1,9 @@
 package com.App.QCM.Rest;
 
 
+import com.App.QCM.Model.Proposition;
 import com.App.QCM.Model.Question;
+import com.App.QCM.Wrapper.QuestionWrapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,18 +17,31 @@ public interface QuestionRest {
     ResponseEntity<String> addNewQuestion(@RequestBody(required = true)
                                                   Map<String, String> requestMap);
 
+    @PostMapping(path = "/{id}/proposition/add")
+    public ResponseEntity<String> addPropositionToQuestion(@PathVariable(value = "id") Integer questionId,
+                                                           @RequestBody(required = true) Proposition propositionRequest);
+
     @GetMapping(path = "/get")
-    ResponseEntity<List<Question>> getAllQuestion(@RequestParam(required = false)
-                                                          String filterValue);
+    ResponseEntity<List<Question>> getAllQuestion();
+
+    @GetMapping(path = "/getQ")
+    ResponseEntity<List<QuestionWrapper>> getAllQuestionWrapper();
+
+    @GetMapping(path = "/get/{id}")
+    ResponseEntity<Question> getQuestionById(@PathVariable(value = "id") Integer questionId);
+
+    @GetMapping(path = "/getQuestionByThemeId/{id}")
+    ResponseEntity<List<QuestionWrapper>> getQuestionByThemeId(@PathVariable(value = "id") Integer themeId);
+
+    @GetMapping(path = "/getQuestionsByQcmId/{id}")
+    ResponseEntity<List<QuestionWrapper>> getAllQuestionByQcmId(@PathVariable(value = "id") Integer qcmId);
 
     @PostMapping(path = "/update")
     ResponseEntity<String> updateQuestion(@RequestBody(required = true)
                                                   Map<String, String> requestMap);
 
-    @PostMapping(path = "/delete")
-    ResponseEntity<String> deleteQuestion(@PathVariable Integer id);
+    @PostMapping(path = "/delete/{id}")
+    ResponseEntity<String> deleteQuestion(@PathVariable(value = "id") Integer id);
 
-    @GetMapping(path = "/get/{id}")
-    ResponseEntity<Question> getQuestionById(@PathVariable(value = "id") Integer questionId);
 
 }

@@ -1,9 +1,11 @@
 package com.App.QCM.RestImpl;
 
+import com.App.QCM.Model.Proposition;
 import com.App.QCM.Model.Question;
 import com.App.QCM.Rest.QuestionRest;
 import com.App.QCM.Service.QuestionService;
 import com.App.QCM.Utils.QcmUtils;
+import com.App.QCM.Wrapper.QuestionWrapper;
 import com.App.QCM.constents.QcmConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,9 +33,29 @@ public class QuestionRestImpl implements QuestionRest {
     }
 
     @Override
-    public ResponseEntity<List<Question>> getAllQuestion(String filterValue) {
+    public ResponseEntity<String> addPropositionToQuestion(Integer questionId, Proposition propositionRequest) {
         try {
-            return questionService.getAllQuestion(filterValue);
+            return questionService.addPropositionToQuestion(questionId, propositionRequest);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return QcmUtils.getResponseEntity(QcmConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    public ResponseEntity<List<Question>> getAllQuestion() {
+        try {
+            return questionService.getAllQuestion();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    public ResponseEntity<List<QuestionWrapper>> getAllQuestionWrapper() {
+        try {
+            return questionService.getAllQuestionWrapper();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -68,5 +90,25 @@ public class QuestionRestImpl implements QuestionRest {
             ex.printStackTrace();
         }
         return new ResponseEntity<Question>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    public ResponseEntity<List<QuestionWrapper>> getQuestionByThemeId(Integer themeId) {
+        try {
+            return questionService.getQuestionByThemeId(themeId);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    public ResponseEntity<List<QuestionWrapper>> getAllQuestionByQcmId(Integer qcmId) {
+        try {
+            return questionService.getAllQuestionByQcmId(qcmId);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

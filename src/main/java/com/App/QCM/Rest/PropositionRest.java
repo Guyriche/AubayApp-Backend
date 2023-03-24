@@ -10,6 +10,9 @@ import java.util.Map;
 @RequestMapping(path = "/proposition")
 public interface PropositionRest {
 
+    @PostMapping(path = "/add")
+    public ResponseEntity<String> addProposition(@RequestBody(required = true) Map<String, String> propositionRequest);
+
     @PostMapping(path = "/question/{questionId}/add")
     public ResponseEntity<String> addNewProposition(@PathVariable(value = "questionId") Integer questionId,
                                                     @RequestBody(required = true) Map<String, String> propositionRequest);
@@ -33,7 +36,7 @@ public interface PropositionRest {
     @PostMapping(path = "/delete/{id}")
     public ResponseEntity<String> deleteProposition(@PathVariable(value = "id") Integer id);
 
-    @DeleteMapping(path = "/question/{questionId}/delete/{propositionId}")
+    @PostMapping(path = "/question/{questionId}/delete/{propositionId}")
     public ResponseEntity<String> deletePropositionFromQuestion(@PathVariable(value = "questionId") Integer questionId,
                                                                 @PathVariable(value = "propositionId")
                                                                         Integer propositionId);

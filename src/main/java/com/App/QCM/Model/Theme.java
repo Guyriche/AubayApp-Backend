@@ -7,7 +7,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import java.io.Serializable;
 
-@NamedQuery(name = "Theme.getAllTheme", query = "select t from Theme t")
+@NamedQuery(name = "Theme.getAllTheme", query = "select new com.App.QCM.Wrapper.ThemeWrapper(t.id, t.wording, t.description) from Theme t")
 
 //@Data
 @Entity
