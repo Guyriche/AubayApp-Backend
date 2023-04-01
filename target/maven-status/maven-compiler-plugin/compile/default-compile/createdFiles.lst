@@ -8,6 +8,7 @@ com\App\QCM\Model\Proposition.class
 com\App\QCM\RestImpl\ThemeRestImpl.class
 com\App\QCM\dao\ThemeDao.class
 com\App\QCM\RestImpl\UserController.class
+com\App\QCM\Rest\PassageRest.class
 com\App\QCM\Service\UserService.class
 com\App\QCM\ServiceImpl\PropositionServiceImpl.class
 com\App\QCM\AubayTestSystemApplication.class
@@ -16,6 +17,7 @@ com\App\QCM\Model\Question.class
 com\App\QCM\ServiceImpl\UserServiceImpl.class
 com\App\QCM\dao\UserDao.class
 com\App\QCM\dao\TestDao.class
+com\App\QCM\Wrapper\PassageWrapper.class
 com\App\QCM\Wrapper\PropositionWrapper.class
 com\App\QCM\Model\Qcm.class
 com\App\QCM\Rest\TestRest.class
@@ -27,6 +29,8 @@ com\App\QCM\Wrapper\TestWrapper.class
 com\App\QCM\constents\QcmConstants.class
 com\App\QCM\Rest\DashboardRest.class
 com\App\QCM\Service\PropositionService.class
+com\App\QCM\ServiceImpl\PassageServiceImpl.class
+com\App\QCM\dao\PassageDao.class
 com\App\QCM\ServiceImpl\DashboardServiceImpl.class
 com\App\QCM\Model\AllLevel.class
 com\App\QCM\dao\QcmDao.class
@@ -44,6 +48,9 @@ com\App\QCM\Service\DashboardService.class
 com\App\QCM\Model\Theme.class
 com\App\QCM\Wrapper\ThemeWrapper.class
 com\App\QCM\Rest\UserRepository.class
+com\App\QCM\Model\Passage.class
+com\App\QCM\RestImpl\PassageRestImpl.class
+com\App\QCM\Service\PassageService.class
 com\App\QCM\Wrapper\UserWrapper.class
 com\App\QCM\dao\QuestionDao.class
 com\App\QCM\Rest\ThemeRest.class

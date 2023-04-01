@@ -2,6 +2,7 @@ package com.App.QCM.Service;
 
 import com.App.QCM.Model.Qcm;
 import com.App.QCM.Model.Test;
+import com.App.QCM.Wrapper.TestWrapper;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
@@ -19,4 +20,8 @@ public interface TestService {
     ResponseEntity<String> updateTest(Map<String, String> requestMap);
 
     ResponseEntity<String> deleteTest(Integer id);
+
+    ResponseEntity<List<TestWrapper>> getTestByThemeId(Integer themeId);
+
+    ResponseEntity<List<TestWrapper>> getAllTestByPassageId(Integer passageId);
 }

@@ -5,6 +5,7 @@ import com.App.QCM.Model.Test;
 import com.App.QCM.Rest.TestRest;
 import com.App.QCM.Service.TestService;
 import com.App.QCM.Utils.QcmUtils;
+import com.App.QCM.Wrapper.TestWrapper;
 import com.App.QCM.constents.QcmConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -59,6 +60,26 @@ public class TestRestImpl implements TestRest {
             ex.printStackTrace();
         }
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    public ResponseEntity<List<TestWrapper>> getTestByThemeId(Integer themeId) {
+        try {
+            return testService.getTestByThemeId(themeId);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    public ResponseEntity<List<TestWrapper>> getAllTestByPassageId(Integer PassageId) {
+        try {
+            return testService.getAllTestByPassageId(PassageId);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @Override

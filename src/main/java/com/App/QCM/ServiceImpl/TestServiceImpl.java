@@ -4,6 +4,7 @@ import com.App.QCM.JWT.JwtFilter;
 import com.App.QCM.Model.*;
 import com.App.QCM.Service.TestService;
 import com.App.QCM.Utils.QcmUtils;
+import com.App.QCM.Wrapper.TestWrapper;
 import com.App.QCM.constents.QcmConstants;
 import com.App.QCM.dao.QcmDao;
 import com.App.QCM.dao.TestDao;
@@ -180,5 +181,25 @@ public class TestServiceImpl implements TestService {
             ex.printStackTrace();
         }
         return QcmUtils.getResponseEntity(QcmConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    public ResponseEntity<List<TestWrapper>> getTestByThemeId(Integer themeId) {
+        try {
+            return new ResponseEntity<>(testDao.getTestByThemeId(themeId), HttpStatus.OK);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    public ResponseEntity<List<TestWrapper>> getAllTestByPassageId(Integer passageId) {
+        try {
+            return new ResponseEntity<>(testDao.getAllTestByPassageId(passageId), HttpStatus.OK);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

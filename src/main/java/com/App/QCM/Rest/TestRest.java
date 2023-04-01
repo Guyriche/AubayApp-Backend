@@ -3,6 +3,7 @@ package com.App.QCM.Rest;
 
 import com.App.QCM.Model.Qcm;
 import com.App.QCM.Model.Test;
+import com.App.QCM.Wrapper.TestWrapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +26,12 @@ public interface TestRest {
 
     @GetMapping(path = "/get/{id}")
     ResponseEntity<Test> getTestById(@PathVariable(value = "id") Integer testId);
+
+    @GetMapping(path = "/getTestByThemeId/{id}")
+    ResponseEntity<List<TestWrapper>> getTestByThemeId(@PathVariable(value = "id") Integer themeId);
+
+    @GetMapping(path = "/getAllTestByPassageId/{id}")
+    ResponseEntity<List<TestWrapper>> getAllTestByPassageId(@PathVariable(value = "id") Integer PassageId);
 
     @PostMapping(path = "/update")
     ResponseEntity<String> updateTest(@RequestBody(required = true)
